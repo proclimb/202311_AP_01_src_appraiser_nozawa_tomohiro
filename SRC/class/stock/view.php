@@ -152,7 +152,7 @@ function subStockView($param)
 				$res  = mysqli_query($param["conn"], $sql);
 				$i = 0;
 				while ($row = mysqli_fetch_array($res)) {
-					$stockNo     = htmlspecialchars($row[1]);
+					$stockNo     = htmlspecialchars($row[0]);
 					$charge      = htmlspecialchars($row[2]);
 					$rank        = fnRankName(htmlspecialchars($row[3] - 1));
 					$insDT       = htmlspecialchars($row[4]);
