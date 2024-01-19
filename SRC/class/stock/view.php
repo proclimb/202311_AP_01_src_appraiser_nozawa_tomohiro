@@ -243,8 +243,8 @@ function subStockEditView($param)
 		<table border="0" cellpadding="5" cellspacing="1">
 			<tr>
 				<th>除外</th>
-				<td><input type="radio" name="del" value="1" /> 非除外
-					<input type="radio" name="del" value="0" /> 除外
+				<td><input type="radio" name="del" value="1" <?php if ($param["sDel"] === "1" || $param["sDel"] == "") print ' checked="checked"' ?> /> 非除外
+					<input type="radio" name="del" value="0" <?php if ($param["sDel"] === "0") print ' checked="checked"' ?> /> 除外
 				</td>
 			</tr>
 			<tr>
