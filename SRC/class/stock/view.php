@@ -4,6 +4,11 @@
 //
 function subStockView($param)
 {
+	$sql = fnSqlStockTradeList();
+	$res = mysqli_query($param["conn"], $sql);
+	while ($row = mysqli_fetch_array($res)) {
+		$TradeList[$row["TRADENO"]] = $row["NAME"];
+	}
 ?>
 	<script>
 		var cal1 = new JKL.Calendar("cal1", "form", "sInsDTFrom");
@@ -54,7 +59,20 @@ function subStockView($param)
 					<th>担当</th>
 					<td><input type="text" name="sCharge" value="<?php print $param["sCharge"] ?>" size="30" /></td>
 					<th>業者名</th>
-					<td><input type="text" name="sAgent" value="<?php print $param["sAgent"] ?>" size="30" /></td>
+					<td>
+						<select name="sAgent">
+							<option value="">-----</option>
+							<?php
+							$sql = fnSqlStockTradeList();
+							$res = mysqli_query($param["conn"], $sql);
+							foreach ($TradeList as $k => $v) {
+							?>
+								<option value="<?php print $k ?>" <?php if ($k == $param["sAgent"]) print ' selected="selected"' ?>><?php print $v ?></option>
+							<?php
+							}
+							?>
+						</select>
+					</td>
 				</tr>
 				<tr>
 					<th>ランク</th>
@@ -150,6 +168,7 @@ function subStockView($param)
 				<?php
 				$sql  = fnSqlStockList(1, $param);
 				$res  = mysqli_query($param["conn"], $sql);
+
 				$i = 0;
 				while ($row = mysqli_fetch_array($res)) {
 					$stockNo     = htmlspecialchars($row[0]);
@@ -179,7 +198,7 @@ function subStockView($param)
 						<td class="list_td<?php print $i; ?>" align="right"><?php print $area; ?></td>
 						<td class="list_td<?php print $i; ?>"><?php print $station; ?></td>
 						<td class="list_td<?php print $i; ?>"><?php print $distance; ?></td>
-						<td class="list_td<?php print $i; ?>"><?php print $agent; ?></td>
+						<td class="list_td<?php print $i; ?>"><?php print $TradeList[$agent]; ?></td>
 						<td class="list_td<?php print $i; ?>"><?php print $store; ?></td>
 						<td class="list_td<?php print $i; ?>"><?php print $cover; ?></td>
 						<td class="list_td<?php print $i; ?>"><?php print $visitDT; ?></td>
@@ -297,7 +316,20 @@ function subStockEditView($param)
 			</tr>
 			<tr>
 				<th>業者名</th>
-				<td><input type="text" name="agent" value="<?php print $param["agent"] ?>" /></td>
+				<td>
+					<select name="agent">
+						<option value="">-----</option>
+						<?php
+						$sql = fnSqlStockTradeList();
+						$res = mysqli_query($param["conn"], $sql);
+						while ($row = mysqli_fetch_array($res)) {
+						?>
+							<option value="<?php print $row["TRADENO"] ?>" <?php if ($row["TRADENO"] == $param["agent"]) print ' selected="selected"' ?>><?php print $row["NAME"] ?></option>
+						<?php
+						}
+						?>
+					</select>
+				</td>
 			</tr>
 			<tr>
 				<th>店舗名</th>

@@ -365,9 +365,6 @@ function subTradeEditComplete()
 	subTrade();
 }
 
-
-
-
 //
 //業者一覧削除処理
 //
@@ -378,6 +375,9 @@ function subTradeDelete()
 	$tradeNo = $_REQUEST['tradeNo'];
 
 	$sql = fnSqlTradeDelete($tradeNo);
+	$res = mysqli_query($conn, $sql);
+
+	$sql = fnSqlStockAgentDelete($tradeNo);
 	$res = mysqli_query($conn, $sql);
 
 	$_REQUEST['act'] = 'tradeSearch';

@@ -109,9 +109,6 @@ function fnSqlTradeInsert($tradeNo, $name, $nameFuri, $branch, $branchFuri, $zip
 	return ($sql);
 }
 
-
-
-
 //
 //業者一覧情報削除
 //
@@ -121,6 +118,19 @@ function fnSqlTradeDelete($tradeNo)
 	$sql .= " SET DEL = -1";
 	$sql .= ",UPDT = CURRENT_TIMESTAMP";
 	$sql .= " WHERE TRADENO = '$tradeNo'";
+
+	return ($sql);
+}
+
+//
+//仕入一覧業者情報削除
+//
+function fnSqlStockAgentDelete($tradeNo)
+{
+	$sql  = "UPDATE TBLSTOCK";
+	$sql .= " SET AGENT = 0";
+	$sql .= ",UPDT = CURRENT_TIMESTAMP";
+	$sql .= " WHERE AGENT = '$tradeNo'";
 
 	return ($sql);
 }

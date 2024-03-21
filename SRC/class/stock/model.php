@@ -25,6 +25,36 @@ function fnSqlStockList($flg, $param)
     $from = " FROM TBLSTOCK";
     $where = " WHERE DEL = " . $param["sDel"];
 
+    // 店舗名をソートの場合
+    if ($param["orderBy"] == 'AGENT' && $flg == 1) {
+        $select  = "SELECT
+        STOCK.STOCKNO,
+        STOCK.CHARGE,
+        STOCK.RANK,
+        DATE_FORMAT(STOCK.INSDT,'%Y/%m/%d'),
+        STOCK.ARTICLE,
+        STOCK.ARTICLEFURI,
+        STOCK.ROOM,
+        IF(STOCK.AREA > 0,STOCK.AREA,''),
+        STOCK.STATION,
+        STOCK.DISTANCE,
+        STOCK.AGENT,
+        STOCK.STORE,
+        STOCK.COVER,
+        IF(STOCK.VISITDT > '0000-00-00',DATE_FORMAT(STOCK.VISITDT,'%Y/%m/%d'),''),
+        IF(STOCK.DESKPRICE > 0,STOCK.DESKPRICE,''),
+        IF(STOCK.VENDORPRICE > 0,STOCK.VENDORPRICE,''),
+        STOCK.NOTE,
+        TRADE.NAME";
+        $from = " FROM TBLSTOCK as STOCK
+        LEFT JOIN TBLTRADE as TRADE
+            ON STOCK.AGENT = TRADE.TRADENO";
+        $where = " WHERE STOCK.DEL = " . $param["sDel"];
+        if ($param["orderBy"]) {
+            $order = " ORDER BY TRADE.NAME " . $param["orderTo"] . " , STOCK.STOCKNO asc";
+        }
+    }
+
     // 検索条件
     if ($param["sCharge"]) {
         $where .= " AND CHARGE LIKE '%" . $param["sCharge"] . "%'";
@@ -77,7 +107,7 @@ function fnSqlStockList($flg, $param)
         $where .= ")";
     }
     if ($param["sAgent"]) {
-        $where .= " AND AGENT LIKE '%" . $param["sAgent"] . "%'";
+        $where .= " AND AGENT = " . $param["sAgent"];
     }
     if ($param["sStore"]) {
         $where .= " AND STORE LIKE '%" . $param["sStore"] . "%'";
@@ -214,6 +244,15 @@ function fnSqlStockExclusion()
     $sql = "UPDATE TBLSTOCK";
     $sql .= " SET DEL = 0";
     $sql .= " WHERE UPDT < NOW() - INTERVAL 1 MONTH";
+
+    return ($sql);
+}
+
+function fnSqlStockTradeList()
+{
+    $sql  = "SELECT TRADENO,NAME,DEL";
+    $sql .= " FROM TBLTRADE";
+    $sql .= " WHERE DEL = 1";
 
     return ($sql);
 }
