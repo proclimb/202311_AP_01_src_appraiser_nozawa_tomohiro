@@ -51,7 +51,7 @@ function fnSqlStockList($flg, $param)
             ON STOCK.AGENT = TRADE.TRADENO";
         $where = " WHERE STOCK.DEL = " . $param["sDel"];
         if ($param["orderBy"]) {
-            $order = " ORDER BY TRADE.NAME " . $param["orderTo"] . " , STOCK.STOCKNO asc";
+            $order = " ORDER BY case when TRADE.DEL = 1 then TRADE.NAME end " . $param["orderTo"] . " , STOCK.STOCKNO asc";
         }
     }
 
